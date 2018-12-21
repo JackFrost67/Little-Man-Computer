@@ -232,3 +232,6 @@
     (setf (nth 10 state) (append out-list (list element)))
     (setf (nth 4 state) new-pc)
     state))
+
+
+%%%% end of file -- lmc.pl
