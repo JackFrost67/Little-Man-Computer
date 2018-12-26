@@ -31,7 +31,7 @@
 	(value-list (value inter-list))
 	(nil-list (make-list (- 100 (- (length value-list) 1))))
 	(memory (fill nil-list value-list :end 1)))
-    (flatten (substitute 0 'nil memory))))
+   (flatten (substitute 0 'nil memory))))
 
 ;;; read-file/1
 ;; legge il file e richiama remove-comment/1
@@ -93,7 +93,7 @@
 		   (label (cdr list) list1)))
 	    (t (label (cdr list) list1))))))
 
-;;; remove-labe/2
+;;; remove-label/2
 
 (defun remove-label (list label)
   (let* ((e (car label))
@@ -115,7 +115,7 @@
 	 '(HLT 0 ADD 1 SUB 2 STA 3 LDA 5 BRA 6
 	   BRZ 7 BRP 8 DAT 0 INP 901 OUT 902)))
     (unless (eq list  nil)
-      (cond ((and (eq (length e) 2) (typep (car (cdr e)) 'symbol))
+      (cond ((and (eql (length e) 2) (typep (car (cdr e)) 'symbol))
 	     (cons
 	      (list (nth (+ (position (car e) operands) 1) operands)
 		    (nth (+ (position (car(cdr e)) label) 1) label))
@@ -149,18 +149,19 @@
 
 (defun execution-loop (state)
   (let ((new-state (one-instruction state)))
-    (cond
-      ((eq (nth 0 new-state) 'HALTED-STATE) (nth 10 new-state))
-      (t (execution-loop new-state)))))
+    (cond ((< (nth 4 state) 99)
+	   (cond
+	     ((eq (nth 0 new-state) 'HALTED-STATE) (nth 10 new-state))
+	     (t (execution-loop new-state)))))))
 
 ;;; one-instruction/1
 
 (defun one-instruction (state)
   (let*((instruction (floor (nth (nth 4 state) (nth 6 state)) 100))
-       (inp-out (nth (nth 4 state) (nth 6 state)))
-       (new-pc (+ (nth 4 state) 1))
-       (num-cell (mod (nth (nth 4 state) (nth 6 state)) 100))
-       (mem-cell (nth num-cell (nth 6 state))))
+	(inp-out (nth (nth 4 state) (nth 6 state)))
+	(new-pc (+ (nth 4 state) 1))
+	(num-cell (mod (nth (nth 4 state) (nth 6 state)) 100))
+	(mem-cell (nth num-cell (nth 6 state))))
     (cond ((or (= instruction 0) (= instruction 4)) (hlt state)) ;; DONE
 	  ((= instruction 1) (add state mem-cell new-pc)) ;; DONE
 	  ((= instruction 2) (sub state mem-cell new-pc)) ;; DONE
@@ -177,19 +178,22 @@
 
 (defun add (state mem-cell new-pc)
   (let ((new-acc (+ (nth 2 state) mem-cell)))
-    (cond((> new-acc 1000)
+    (cond((>= new-acc 1000)
 	  (setf (nth 12 state) 'FLAG)
 	  (setf (nth 2 state) (mod new-acc 1000)))
-	 (t (setf (nth 2 state) (mod new-acc 1000))))
+	 (t (setf (nth 2 state) new-acc)
+	     (setf (nth 12 state) 'NOFLAG)))
     (setf (nth 4 state) new-pc)
     state))
 
 (defun sub (state mem-cell new-pc)
   (let ((new-acc (- (nth 2 state) mem-cell)))
     (cond((< new-acc 0)
-	  (setf (nth 12 state) 'FLAG)))
-	 (setf (nth 4 state) new-pc)
-	 (setf (nth 2 state) (mod new-acc 1000))
+	  (setf (nth 12 state) 'FLAG)
+	  (setf (nth 2 state) (mod new-acc 1000)))
+	 (t (setf (nth 2 state) new-acc)
+	     (setf (nth 12 state) 'NOFLAG)))
+    (setf (nth 4 state) new-pc)
     state))
 
 (defun sta (state num-cell new-pc)
@@ -207,13 +211,13 @@
   state)
 
 (defun brz (state num-cell new-pc)
-  (cond ((and (eq (nth 2 state) 0) (eq (nth 12 state) 'noflag))
+  (cond ((and (= (nth 2 state) 0) (eq (nth 12 state) 'NOFLAG))
 	 (bra state num-cell))
 	(t (setf (nth 4 state) new-pc)))
   state)
 
 (defun brp (state num-cell new-pc)
-    (cond ((eq (nth 12 state) 'noflag)
+    (cond ((eq (nth 12 state) 'NOFLAG)
 	   (bra state num-cell))
 	  (t (setf (nth 4 state) new-pc)))
     state)
@@ -234,4 +238,4 @@
     state))
 
 
-%%%% end of file -- lmc.pl
+;;;; end of file -- lmc.pl
