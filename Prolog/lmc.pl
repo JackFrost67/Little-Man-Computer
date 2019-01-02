@@ -277,7 +277,3 @@ one_instruction(state(Acc, Pc, Mem, Input, Output, Flag),
                 halted_state(Acc, Pc, Mem, Input, Output, Flag)).
 
 %%%% end of file -- lmc.pl
-
-
-
-
