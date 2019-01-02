@@ -16,8 +16,7 @@
 		      :MEM mem
 		      :IN input
 		      :OUT nil
-		      :FLAG 'NOFLAG
-		      )))
+		      :FLAG 'NOFLAG)))
     (execution-loop state)))
 
 ;;; lmc-load/1
@@ -27,7 +26,7 @@
   (let*((list (remove nil (read-file path)))
 	(label-list (label list list))
 	(new-list (remove-label list label-list))
-	(inter-list (interpreter new-list new-list (flatten label-list)))
+	(inter-list (interpreter new-list (flatten label-list)))
 	(value-list (value inter-list))
 	(nil-list (make-list (- 100 (- (length value-list) 1))))
 	(memory (fill nil-list value-list :end 1)))
@@ -44,23 +43,6 @@
 							  (search "//" line)))
 				  (read-helper))))))
       (read-helper))))
-
-;;; convert-string/1
-;; genera una lista di simboli eliminando spazi in eccesso/non desiderati 
-
-(defun convert-string (str)
-  (when (string/=  str "")
-    (multiple-value-bind (value num-chars) (read-from-string str nil)
-      (when value
-	(cons value (convert-string (subseq str num-chars)))))))
-
-;;; remove-comment/1
-
-(defun remove-comment (str)
-  (when (eq (search "//" str) nil)
-    (multiple-value-bind (value num-chars) (read-from-string str nil)
-      (when value
-	(cons value (remove-comment (subseq str num-chars)))))))
 
 ;;; flatten/1
 
@@ -109,7 +91,7 @@
 ;; valuto la sua posizione nella lista delle operazioni
 ;; assegno il valore che è nella cella adiacente
 
-(defun interpreter (list list1 label)
+(defun interpreter (list label)
   (let ((e (car list))
 	(operands
 	 '(HLT 0 ADD 1 SUB 2 STA 3 LDA 5 BRA 6
@@ -119,16 +101,15 @@
 	     (cons
 	      (list (nth (+ (position (car e) operands) 1) operands)
 		    (nth (+ (position (car(cdr e)) label) 1) label))
-	      (interpreter (cdr list) list1 label)))
+	      (interpreter (cdr list) label)))
 	    ((eq (length e) 2)
 	     (cons
 	      (list (nth (+ (position (car e) operands) 1) operands)
 		    (car(cdr e)))
-	      (interpreter (cdr list) list1 label)))
+	      (interpreter (cdr list) label)))y
 	    (t (cons
 		(list (nth (+ (position (car e) operands) 1) operands))
-		(interpreter (cdr list) list1 label)))))
-    ))
+		(interpreter (cdr list) label)))))))
 
 ;;; value/1
 ;; prendo ogni elemento della lista
@@ -149,7 +130,7 @@
 
 (defun execution-loop (state)
   (let ((new-state (one-instruction state)))
-    (cond ((< (nth 4 state) 99)
+    (cond ((< (nth 4 state) 100)
 	   (cond
 	     ((eq (nth 0 new-state) 'HALTED-STATE) (nth 10 new-state))
 	     (t (execution-loop new-state))))
