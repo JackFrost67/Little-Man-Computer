@@ -31,7 +31,7 @@
 	(value-list (value inter-list))
 	(nil-list (make-list (- 100 (- (length value-list) 1))))
 	(memory (fill nil-list value-list :end 1)))
-   (flatten (substitute 0 'nil memory))))
+    (flatten (substitute 0 'nil memory))))
 
 ;;; read-file/1
 ;; legge il file e richiama remove-comment/1
@@ -152,7 +152,8 @@
     (cond ((< (nth 4 state) 99)
 	   (cond
 	     ((eq (nth 0 new-state) 'HALTED-STATE) (nth 10 new-state))
-	     (t (execution-loop new-state)))))))
+	     (t (execution-loop new-state))))
+	  (t (nth 10 new-state)))))
 
 ;;; one-instruction/1
 
@@ -224,11 +225,13 @@
 
 (defun inp (state new-pc)
   (let ((element (car (nth 8 state)))
-	 (list (rest (nth 8 state))))
-    (setf (nth 2 state) element)
-    (setf (nth 8 state) list)
-    (setf (nth 4 state) new-pc)
-    state))
+	(list (rest (nth 8 state))))
+    (cond ((eql (nth 8 state) nil)
+	   (hlt state))
+	  (t (setf (nth 2 state) element)
+	     (setf (nth 8 state) list)
+	     (setf (nth 4 state) new-pc)
+	     state))))
 
 (defun out (state new-pc)
   (let ((element (nth 2 state))
