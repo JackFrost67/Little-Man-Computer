@@ -163,16 +163,16 @@
 	(new-pc (+ (nth 4 state) 1))
 	(num-cell (mod (nth (nth 4 state) (nth 6 state)) 100))
 	(mem-cell (nth num-cell (nth 6 state))))
-    (cond ((or (= instruction 0) (= instruction 4)) (hlt state)) ;; DONE
-	  ((= instruction 1) (add state mem-cell new-pc)) ;; DONE
-	  ((= instruction 2) (sub state mem-cell new-pc)) ;; DONE
-	  ((= instruction 3) (sta state num-cell new-pc)) ;; DONE
-	  ((= instruction 5) (lda state mem-cell new-pc)) ;; DONE
-	  ((= instruction 6) (bra state num-cell)) ;; DONE
-	  ((= instruction 7) (brz state num-cell new-pc)) ;; DONE
-	  ((= instruction 8) (brp state num-cell new-pc)) ;; DONE
-	  (t (cond ((= inp-out 901) (inp state new-pc)) ;; DONE
-		   (t (out state new-pc))))))) ;; DONE
+    (cond ((or (= instruction 0) (= instruction 4)) (hlt state))
+	  ((= instruction 1) (add state mem-cell new-pc))
+	  ((= instruction 2) (sub state mem-cell new-pc)) 
+	  ((= instruction 3) (sta state num-cell new-pc))
+	  ((= instruction 5) (lda state mem-cell new-pc))
+	  ((= instruction 6) (bra state num-cell))
+	  ((= instruction 7) (brz state num-cell new-pc))
+	  ((= instruction 8) (brp state num-cell new-pc))
+	  (t (cond ((= inp-out 901) (inp state new-pc))
+		   (t (out state new-pc)))))))
 
 (defun hlt (state)
   (substitute 'HALTED-STATE 'STATE state))
