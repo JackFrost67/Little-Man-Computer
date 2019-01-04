@@ -6,7 +6,6 @@
 
 %%%% lmc.pl
 
-
 %lmc_run/3
 lmc_run(Filename,  Input, Output) :-
     lmc_load(Filename, Mem),
@@ -18,44 +17,45 @@ lmc_load(FileName, Mem2) :-
     read_string(BufferIn, "", " \r\t", _, X),
     string_upper(X, X1),
     split_string(X1, "\n", " ", Y),
-    out(Y, Z),
+    out_(Y, Z),
     delete(Z, "", Z2),
     label(Z2, 0, Z3, Labels),
     flatten(Labels, Labels1),
-    interpreter(Z3, Z4, Labels1),
+    write(Y),
+    interpreter_(Z3, Z4, Labels1),
     value_(Z4, Z5),
     flatten(Z5, Mem),
     list(Mem, Mem2),
     close(BufferIn).
 
 %% Normalizza la stringa elimianando i commenti
-out([], []).
-out([H | T], [H1 | T1]) :-
-    make(H, H1),
-    out(T, T1), !.
+out_([], []).
+out_([H | T], [H1 | T1]) :-
+    out(H, H1),
+    out_(T, T1), !.
 
-make([], []).
-make(H, List2) :-
+out([], []).
+out(H, List2) :-
     string_chars(H, H1),
-    remove_comment_(H1, List),
+    remove_comment(H1, List),
     string_chars(List2, List), !.
 
-interpreter([], [], _).
-interpreter([H | T], [H2 | T2], Labels) :-
+interpreter_([], [], _).
+interpreter_([H | T], [H2 | T2], Labels) :-
     label2(H, H1, Labels),
-    interpreter_(H1, H2),
-    interpreter(T, T2, Labels), !.
+    interpreter(H1, H2),
+    interpreter_(T, T2, Labels), !.
 
-interpreter_([], []).
-interpreter_([H | T], [H1 | T1]) :-
+interpreter([], []).
+interpreter([H | T], [H1 | T1]) :-
     string_to_number(H, H1),
-    interpreter_(T, T1), !.
+    interpreter(T, T1), !.
 
-remove_comment_([], []).
-remove_comment_([H, H | _], []) :-
+remove_comment([], []).
+remove_comment([H, H | _], []) :-
     atom_string('/', H).
-remove_comment_([H | T], [H | Z]) :-
-    remove_comment_(T, Z).
+remove_comment([H | T], [H | Z]) :-
+    remove_comment(T, Z).
 
 %% Prende in input un atomo-istruzione e lo trasforma
 %% nel corrispettivo numerico
@@ -141,10 +141,10 @@ execution_loop(state(Acc, Pc, Mem, Input, Output, Flag), Output1):-
     Pc < Len,
     one_instruction(state(Acc, Pc, Mem, Input, Output, Flag), NewState),
     execution_loop(NewState, Output1).
-%execution_loop(state(_, Pc, Mem, _, Output, _), Output1):-
-%    length(Mem, Len),
-%    Pc = Len,
-%    flatten(Output, Output1).
+execution_loop(state(_, Pc, Mem, _, Output, _), Output1):-
+    length(Mem, Len),
+    Pc = Len,
+    flatten(Output, Output1).
 execution_loop(halted_state(_, _, _, _, Output, _), Output1):-
      flatten(Output, Output1).
 
