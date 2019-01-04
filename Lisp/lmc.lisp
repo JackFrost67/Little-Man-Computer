@@ -44,6 +44,14 @@
 				  (read-helper))))))
       (read-helper))))
 
+;;; remove-comment/1
+
+(defun remove-comment (str)
+  (when (eq (search "//" str) nil)
+    (multiple-value-bind (value num-chars) (read-from-string str nil)
+      (when value
+	(cons value (remove-comment (subseq str num-chars)))))))
+
 ;;; flatten/1
 
 (defun flatten (x)
@@ -106,7 +114,7 @@
 	     (cons
 	      (list (nth (+ (position (car e) operands) 1) operands)
 		    (car(cdr e)))
-	      (interpreter (cdr list) label)))y
+	      (interpreter (cdr list) label)))
 	    (t (cons
 		(list (nth (+ (position (car e) operands) 1) operands))
 		(interpreter (cdr list) label)))))))
