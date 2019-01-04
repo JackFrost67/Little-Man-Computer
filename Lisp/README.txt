@@ -52,6 +52,25 @@ value/1 :
     finalmente il codice macchina riferito al codice assembly.
     Si esegue un'operazione aritmetica per ottenere il codice macchina.
 
+execution-loop/1:
+    Prende in input lo stato, creato nella chiamata di lmc-run/2 ed esegue 
+    i loop consumando sia gli elementi della lista INPUT (se presenti) sia
+    gli elementi della memoria generata, fino a quando non viene trovata 
+    un'istruzione non valida o un HLT. In questo caso restituisce la lista
+    di OUTPUT. 
+    In caso contrario chiama la one-instruction/1 (come richiesto).
+    
+one-instruction/1:
+    Prende in input lo stato e modifica le sue componenti in base
+    all'istruzine corrente identificata dal PC (program-counter).
+    Se l'istruzione viene identificata come HLT o non è valida la macchina
+    va in HALTED-STATE e blocca la sua computazione.
+    Lo stato della macchina è identificata dal primo elemento (posizione 0) 
+    della lista state.
+    Il resto della lista identifica, corrispettivamente, l'ACCUMULATORE, 
+    il PC, la MEMORIA, la lista di INPUT, la lista di OUTPUT e il FLAG che
+    viene attivato/disattivato in particolari situazioni.
+
 
 
 
