@@ -70,8 +70,3 @@ one-instruction/1:
     Il resto della lista identifica, corrispettivamente, l'ACCUMULATORE, 
     il PC, la MEMORIA, la lista di INPUT, la lista di OUTPUT e il FLAG che
     viene attivato/disattivato in particolari situazioni.
-
-
-
-
-
