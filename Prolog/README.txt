@@ -17,23 +17,37 @@ lmc_load/3:
     alle righe del file. Ogni cella perciò rappresenta una riga del file.
     Viene di seguito fatto uno string_upper/2, essendo la macchina
     case-insensitive.
-    %La chiamata split_string/4 genera una lista di liste, in cui ogni lista
-    %rappresenta una riga ed ogni elemento della lista è una instruzione o
-    %un etichetta o un valore appartenente alla riga.
-    %Da cui in poi verranno eseguite delle chiamate ricorsive innestate
-    %atte a scorrere la lista contentente le liste e ad analizzare il loro
-    %contenuto.
-    %Tutto le chiamate ricorsive atte a prelevare la lista interna sono
-    %identificate dall'underscore (ID_/n).
+    La chiamata split_string/4 genera una lista di elementi, che rappresentano
+    una riga del file dato in input.
 
 %out_/2:
-    %Rappresenta la chiamata alla ricorsione di out/2. Quest'ultimo ha il 
-    %compito di rimuovere i commenti richiamando a sua volta il predicato
-    %remove_comment/2. La successiva chiamata di delete/3 serve a rimuovere
-    %le carcasse di liste/elementi vuoti presenti nella lista madre.
+    Rappresenta la chiamata alla ricorsione di out/2. Quest'ultimo ha il 
+    compito di rimuovere i commenti richiamando a sua volta il predicato
+    remove_comment/2. La successiva chiamata di delete/3 serve a rimuovere
+    gli elementi vuoti presenti nella lista.
 
-%label/4:
-    %In questo predicato vengono prelevate le etichette e inserite in una lista
-    %contenente in INDEX l'etichetta ed in INDEX + 1 l'indice di memoria a cui
-    %la l'etichetta si riferisce.
+label/4:
+    In questo predicato vengono prelevate le etichette e inserite in una lista
+    contenente alla posizione INDEX l'etichetta ed alla posizione INDEX + 1
+    l'indice di memoria a cui l'etichetta si riferisce.
+    Questo predicato si occupa anche di rimuovere le etichette, generando una
+    lista di liste. Gli elementi di tale lista sono dunque righe di codice 
+    assembly che verranno parsate in codice macchina.
+    La flatten/2, chiamata sulla lista risultante si rivela necessaria per
+    evitare chiamate ricorsive annidate per il prelevamento dell'etichetta
+    e dell'indice.
+
+interpreter_/3:
+    Qui avviene il vero parsing. Viene fatta una chiamata ricorsiva annidata
+    per il prelevamento della lista interna. Prima di parsare, avviene il 
+    controllo delle etichette, assegnandogli il loro valore.
+    Il predicato interpreter/2 si occupa di verificare che tipo di istruzione
+    i tratta assegnando il suo numero indicativo.
+    
+value_/2:
+    Predicato atto a gestire la chiamata ricorsiva annidata value/2, che 
+    attraverso un'operazione aritmetica parsa il codice assembly in codice
+    macchina.
+
+
 

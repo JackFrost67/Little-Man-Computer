@@ -6,8 +6,6 @@
 ;;;; lmc.lisp
 
 ;;; lmc-run/2
-;; lancia il programma e genera lo stato
-
 (defun lmc-run (path input)
   (let* ((mem (lmc-load path))
 	 (state (list 'STATE
@@ -20,8 +18,6 @@
     (execution-loop state)))
 
 ;;; lmc-load/1
-;; carica il fila e genera la memoria
-
 (defun lmc-load (path)
   (let*((list (remove nil (read-file path)))
 	(label-list (label list list))
@@ -33,8 +29,6 @@
     (flatten (substitute 0 'nil memory))))
 
 ;;; read-file/1
-;; legge il file e richiama remove-comment/1
-
 (defun read-file (path)
   (with-open-file (f path  :direction :input)
     (labels ((read-helper ()
@@ -45,7 +39,6 @@
       (read-helper))))
 
 ;;; remove-comment/1
-
 (defun remove-comment (str)
   (when (eq (search "//" str) nil)
     (multiple-value-bind (value num-chars) (read-from-string str nil)
@@ -53,7 +46,6 @@
 	(cons value (remove-comment (subseq str num-chars)))))))
 
 ;;; flatten/1
-
 (defun flatten (x)
   (cond ((null x) x)
 	((atom x) (list x))
@@ -61,10 +53,6 @@
 		   (flatten (rest x))))))
 
 ;;; label/2
-;; gestione delle etichette
-;; list usata per la ricorsione
-;; list1 come riferimento per l'indirizzo dell'etichetta
-
 (defun label (list list1)
   (let*((e (car list)) ;;riga
 	(w (nth 0 e))) ;;primo elemento (etichetta)
@@ -84,7 +72,6 @@
 	    (t (label (cdr list) list1))))))
 
 ;;; remove-label/2
-
 (defun remove-label (list label)
   (let* ((e (car label))
 	 (n (car (cdr e)))
@@ -95,10 +82,6 @@
     (replace list new-list)))
 
 ;;; interpreter/3
-;; prendo un simbolo della lista
-;; valuto la sua posizione nella lista delle operazioni
-;; assegno il valore che è nella cella adiacente
-
 (defun interpreter (list label)
   (let ((e (car list))
 	(operands
@@ -120,10 +103,6 @@
 		(interpreter (cdr list) label)))))))
 
 ;;; value/1
-;; prendo ogni elemento della lista
-;; moltiplico per 100 il valore dell'operazione
-;; sommo il numero della cella
-
 (defun value (memory)
   (let ((e (car memory)))
     (unless (eq e nil)
@@ -135,7 +114,6 @@
 ;; -*- END OF PARSER -*-
 
 ;;; execution-loop/1
-
 (defun execution-loop (state)
   (let ((new-state (one-instruction state)))
     (cond ((< (nth 4 state) 100)
@@ -145,7 +123,6 @@
 	  (t (nth 10 new-state)))))
 
 ;;; one-instruction/1
-
 (defun one-instruction (state)
   (let*((instruction (floor (nth (nth 4 state) (nth 6 state)) 100))
 	(inp-out (nth (nth 4 state) (nth 6 state)))
@@ -162,10 +139,11 @@
 	  ((= instruction 8) (brp state num-cell new-pc))
 	  (t (cond ((= inp-out 901) (inp state new-pc))
 		   (t (out state new-pc)))))))
-
+;;; hlt/1
 (defun hlt (state)
   (substitute 'HALTED-STATE 'STATE state))
 
+;;; add/3
 (defun add (state mem-cell new-pc)
   (let ((new-acc (+ (nth 2 state) mem-cell)))
     (cond((>= new-acc 1000)
@@ -176,6 +154,7 @@
     (setf (nth 4 state) new-pc)
     state))
 
+;;; sub/3
 (defun sub (state mem-cell new-pc)
   (let ((new-acc (- (nth 2 state) mem-cell)))
     (cond((< new-acc 0)
@@ -186,32 +165,38 @@
     (setf (nth 4 state) new-pc)
     state))
 
+;;; sta/3
 (defun sta (state num-cell new-pc)
   (setf (nth num-cell (nth 6 state)) (nth 2 state))
   (setf (nth 4 state) new-pc)
   state)
 
+;;; lda/3
 (defun lda (state mem-cell new-pc)
   (setf (nth 2 state) mem-cell)
   (setf (nth 4 state) new-pc)
   state)
 
+;;; bra/2
 (defun bra (state num-cell)
   (setf (nth 4 state) num-cell)
   state)
 
+;;; brz/3
 (defun brz (state num-cell new-pc)
   (cond ((and (= (nth 2 state) 0) (eq (nth 12 state) 'NOFLAG))
 	 (bra state num-cell))
 	(t (setf (nth 4 state) new-pc)))
   state)
 
+;;; brp/3 
 (defun brp (state num-cell new-pc)
     (cond ((eq (nth 12 state) 'NOFLAG)
 	   (bra state num-cell))
 	  (t (setf (nth 4 state) new-pc)))
     state)
 
+;;; inp/2
 (defun inp (state new-pc)
   (let ((element (car (nth 8 state)))
 	(list (rest (nth 8 state))))
@@ -222,6 +207,7 @@
 	     (setf (nth 4 state) new-pc)
 	     state))))
 
+;;; out/2
 (defun out (state new-pc)
   (let ((element (nth 2 state))
 	(out-list (nth 10 state)))
@@ -230,4 +216,4 @@
     state))
 
 
-;;;; end of file -- lmc.pl
+;;;; end of file -- lmc.lisp
