@@ -26,6 +26,7 @@
 	(value-list (value inter-list))
 	(nil-list (make-list (- 100 (- (length value-list) 1))))
 	(memory (fill nil-list value-list :end 1)))
+    (print new-list)
     (flatten (substitute 0 'nil memory))))
 
 ;;; read-file/1
