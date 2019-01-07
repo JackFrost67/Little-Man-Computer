@@ -95,13 +95,19 @@ label1(List, Index, Mem, [Elem, Index]):-
 label1(List, _, List, 0).
 
 %label2/3
+label2(List, List, _) :-
+    length(List, 2),
+    nth0(0, List, Dat),
+    Dat = "DAT",
+    nth0(1, List, Elem),
+    number(Elem), !.
 label2(List, List2, Labels) :-
     length(List, 2),
     nth0(1, List, Elem),
     nth0(Index, Labels, Elem),
     Index1 is Index + 1,
     nth0(Index1, Labels, Numb),
-    replace(1, List, Numb, List2), !.
+replace(1, List, Numb, List2), !.
 label2(List, List, _).
 
 %value_/2
