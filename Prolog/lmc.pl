@@ -107,7 +107,7 @@ label2(List, List2, Labels) :-
     nth0(Index, Labels, Elem),
     Index1 is Index + 1,
     nth0(Index1, Labels, Numb),
-replace(1, List, Numb, List2), !.
+    replace(1, List, Numb, List2), !.
 label2(List, List, _).
 
 %value_/2
