@@ -1,5 +1,5 @@
-;;;;; Matricola: 829937 - Fabio D'Elia
-;;;;; Progetto LMC - LITTLE MAN COMPUTER
+;;;; Matricola: 829937 - Fabio D'Elia
+;;;; Progetto LMC - LITTLE MAN COMPUTER
 
 ;;;; -*- Mode: Lisp -*-
 
@@ -95,13 +95,13 @@
 		       (interpreter (cdr list) label)))))
 	    ((eq (length e) 2)
 	     (cond ((and (eq (car e) 'DAT) (typep (car (cdr e)) 'symbol)))
-	      (t(cons
-	       (list (nth (+ (position (car e) operands) 1) operands)
-		     (car(cdr e)))
-	       (interpreter (cdr list) label)))))
-	     (t (cons
-		 (list (nth (+ (position (car e) operands) 1) operands))
-		 (interpreter (cdr list) label)))))))
+		   (t(cons
+		      (list (nth (+ (position (car e) operands) 1) operands)
+			    (car(cdr e)))
+		      (interpreter (cdr list) label)))))
+	    (t (cons
+		(list (nth (+ (position (car e) operands) 1) operands))
+		(interpreter (cdr list) label)))))))
 
 ;;; value/1
 (defun value (memory)
@@ -112,7 +112,7 @@
 		   (value (cdr memory))))
 	    (t (cons (car e) (value (cdr memory))))))))
 
-;; -*- END OF PARSER -*-
+;;;; -*- END OF PARSER -*-
 
 ;;; execution-loop/1
 (defun execution-loop (state)
@@ -151,7 +151,7 @@
 	  (setf (nth 12 state) 'FLAG)
 	  (setf (nth 2 state) (mod new-acc 1000)))
 	 (t (setf (nth 2 state) new-acc)
-	     (setf (nth 12 state) 'NOFLAG)))
+	    (setf (nth 12 state) 'NOFLAG)))
     (setf (nth 4 state) new-pc)
     state))
 
@@ -162,7 +162,7 @@
 	  (setf (nth 12 state) 'FLAG)
 	  (setf (nth 2 state) (mod new-acc 1000)))
 	 (t (setf (nth 2 state) new-acc)
-	     (setf (nth 12 state) 'NOFLAG)))
+	    (setf (nth 12 state) 'NOFLAG)))
     (setf (nth 4 state) new-pc)
     state))
 
@@ -192,10 +192,10 @@
 
 ;;; brp/3 
 (defun brp (state num-cell new-pc)
-    (cond ((eq (nth 12 state) 'NOFLAG)
-	   (bra state num-cell))
-	  (t (setf (nth 4 state) new-pc)))
-    state)
+  (cond ((eq (nth 12 state) 'NOFLAG)
+	 (bra state num-cell))
+	(t (setf (nth 4 state) new-pc)))
+  state)
 
 ;;; inp/2
 (defun inp (state new-pc)

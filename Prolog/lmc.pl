@@ -1,14 +1,16 @@
-%%%%% Matricola: 829937 Fabio D'Elia
-%%%%% Progetto LMC - LITTLE MAN COMPUTER
+%%%% Matricola: 829937 Fabio D'Elia
+%%%% Progetto LMC - LITTLE MAN COMPUTER
 
 %%%% -*- Mode: Prolog -*-
 
 %%%% lmc.pl
+
+%%%lmc_run/3
 lmc_run(Filename, Input, Output) :-
     lmc_load(Filename, Mem),
     execution_loop(state(0, 0, Mem, Input, [], "NoFlag"), Output), !.
 
-%lmc_load/2
+%%%lmc_load/2
 lmc_load(FileName, Mem2) :-
     open(FileName, read, BufferIn),
     read_string(BufferIn, "", " \r\t", _, X),
@@ -24,40 +26,40 @@ lmc_load(FileName, Mem2) :-
     list(Mem, Mem2),
     close(BufferIn).
 
-%out_/2
+%%%out_/2
 out_([], []).
 out_([H | T], [H1 | T1]) :-
     out(H, H1),
     out_(T, T1), !.
 
-%out/2
+%%%out/2
 out([], []).
 out(H, List2) :-
     string_chars(H, H1),
     remove_comment(H1, List),
     string_chars(List2, List), !.
 
-%interpreter_/3
+%%%interpreter_/3
 interpreter_([], [], _).
 interpreter_([H | T], [H2 | T2], Labels) :-
     label2(H, H1, Labels),
     interpreter(H1, H2),
     interpreter_(T, T2, Labels), !.
 
-%interpreter/2
+%%%interpreter/2
 interpreter([], []).
 interpreter([H | T], [H1 | T1]) :-
     string_to_number(H, H1),
     interpreter(T, T1), !.
 
-%remove_comment/2
+%%%remove_comment/2
 remove_comment([], []).
 remove_comment([H, H | _], []) :-
     atom_string('/', H).
 remove_comment([H | T], [H | Z]) :-
     remove_comment(T, Z).
 
-%string_to_number/2
+%%%string_to_number/2
 string_to_number(Inst, InstNumb) :-
     Y = ["HLT", "ADD", "SUB",
          "STA", " ", "LDA",
@@ -72,7 +74,7 @@ string_to_number("OUT", 902).
 string_to_number("DAT", 0).
 string_to_number(String, String).
 
-%label/4
+%%%label/4
 label([], _, [], []).
 label([H | T], Index, [H1 | T1], [H2 | T2]):-
     split_string(H, " ", "\s", List),
@@ -80,7 +82,7 @@ label([H | T], Index, [H1 | T1], [H2 | T2]):-
     Index1 is Index + 1,
     label(T, Index1, T1, T2), !.
 
-%label1/4
+%%%label1/4
 label1(List, Index, Mem, [Elem, Index]) :-
     length(List, 3),
     nth0(0, List, Elem, Mem),!.
@@ -92,7 +94,7 @@ label1(List, Index, Mem, [Elem, Index]):-
     nth0(0,List, _, Mem),!.
 label1(List, _, List, 0).
 
-%label2/3
+%%%label2/3
 label2(List, List, _) :-
     length(List, 2),
     nth0(0, List, Dat),
@@ -108,23 +110,23 @@ label2(List, List2, Labels) :-
     replace(1, List, Numb, List2), !.
 label2(List, List, _).
 
-%value_/2
+%%%value_/2
 value_([], []).
 value_([H | T], [H1 | T1]) :-
     value(H, H1),
     value_(T, T1),!.
 
-%value/2
+%%%value/2
 value([H1, H2], Value) :-
     Value is (H1 * 100) + H2.
 value([H1 | _], [H1]).
 
-%replace/4
+%%%replace/4
 replace(Pos, List, Elem, NewList):-
     nth0(Pos, List, _, TmpList),
     nth0(Pos, NewList, Elem, TmpList).
 
-%is_member/1
+%%%is_member/1
 is_member(X) :-
     Y = ["HLT", "ADD", "SUB",
          "STA", "LDA", "BRA",
@@ -132,13 +134,14 @@ is_member(X) :-
          "INP", "OUT"],
     member(X, Y), !.
 
-%list/2
+%%%list/2
 list(Mem, Mem3) :-
     length(Mem, Index),
     Index1 is 100 - Index,
     list_(Index1, Mem2),
     append(Mem, Mem2, Mem3).
-%list_/2
+
+%%%list_/2
 list_(0, []).
 list_(Length, [H | T]):-
     Length \= 0,
@@ -146,9 +149,9 @@ list_(Length, [H | T]):-
     Length1 is Length - 1,
     list_(Length1, T).
 
-%% -*- END OF PARSER -*-
+%%%% -*- END OF PARSER -*-
 
-%%execution_loop
+%%%%execution_loop/2
 execution_loop(state(Acc, Pc, Mem, Input, Output, Flag), Output1):-
     length(Mem, Len),
     Pc < Len,
@@ -161,7 +164,7 @@ execution_loop(state(_, Pc, Mem, _, Output, _), Output1):-
 execution_loop(halted_state(_, _, _, _, Output, _), Output1):-
      flatten(Output, Output1).
 
-%%somma
+%%%%somma
 one_instruction(state(Acc, Pc, Mem, Input, Output, _),
                 state(Acc1, Pc1, Mem, Input, Output, Flag)) :-
     nth0(Pc, Mem, Inst),
@@ -186,7 +189,7 @@ one_instruction(state(Acc, Pc, Mem, Input, Output, _),
     Flag = "NoFlag",
     Acc1 is Ris mod 1000.
 
-%%sottrazione
+%%%%sottrazione
 one_instruction(state(Acc, Pc, Mem, Input, Output, _),
                 state(Acc1, Pc1, Mem, Input, Output, Flag)) :-
     nth0(Pc, Mem, Inst),
@@ -211,7 +214,7 @@ one_instruction(state(Acc, Pc, Mem, Input, Output, _),
     Flag = "NoFlag",
     Acc1 is Ris mod 1000.
 
-%%store
+%%%store
 one_instruction(state(Acc, Pc, Mem, Input, Output, Flag),
                 state(Acc, Pc1, Mem2, Input, Output, Flag)) :-
     nth0(Pc, Mem, Inst),
@@ -221,7 +224,7 @@ one_instruction(state(Acc, Pc, Mem, Input, Output, Flag),
     Pc1 is Pc + 1,
     replace(X, Mem, Acc, Mem2).
 
-%%load
+%%%load
 one_instruction(state(_, Pc, Mem, Input, Output, Flag),
                 state(Y, Pc1, Mem, Input, Output, Flag)) :-
     nth0(Pc, Mem, Inst),
@@ -231,7 +234,7 @@ one_instruction(state(_, Pc, Mem, Input, Output, Flag),
     nth0(X, Mem, Y),
     Pc1 is Pc + 1.
 
-%%branch
+%%%branch
 one_instruction(state(Acc, Pc, Mem, Input, Output, Flag),
                 state(Acc, Pc1, Mem, Input, Output, Flag)) :-
     nth0(Pc, Mem, Inst),
@@ -239,7 +242,7 @@ one_instruction(state(Acc, Pc, Mem, Input, Output, Flag),
     Inst < 700,
     Pc1 is Inst mod 100.
 
-%%branch if zero
+%%%branch if zero
 one_instruction(state(Acc, Pc, Mem, Input, Output, Flag),
                 state(Acc, Pc1, Mem, Input, Output, Flag)) :-
     nth0(Pc, Mem, Inst),
@@ -255,7 +258,7 @@ one_instruction(state(Acc, Pc, Mem, Input, Output, Flag),
     Inst < 800,
     Pc1 is Pc + 1.
 
-%%branch if positive
+%%%branch if positive
 one_instruction(state(Acc, Pc, Mem, Input, Output, Flag),
                 state(Acc, Pc1, Mem, Input, Output, Flag)) :-
     nth0(Pc, Mem, Inst),
@@ -270,7 +273,7 @@ one_instruction(state(Acc, Pc, Mem, Input, Output, Flag),
     Inst < 900,
     Pc1 is Pc + 1.
 
-%%input
+%%%input
 one_instruction(state(_, Pc, Mem, Input, Output, Flag),
                 state(Acc1, Pc1, Mem, Input1, Output, Flag)) :-
     nth0(Pc, Mem, Inst),
@@ -278,14 +281,14 @@ one_instruction(state(_, Pc, Mem, Input, Output, Flag),
     nth0(0, Input, Acc1, Input1),
     Pc1 is Pc + 1.
 
-%%output
+%%%output
 one_instruction(state(Acc, Pc, Mem, Input, Output, Flag),
                 state(Acc, Pc1, Mem, Input, [Output, Acc], Flag)) :-
     nth0(Pc, Mem, Inst),
     Inst is 902,
     Pc1 is Pc + 1.
 
-%%halt
+%%%halt
 one_instruction(state(Acc, Pc, Mem, Input, Output, Flag),
                 halted_state(Acc, Pc, Mem, Input, Output, Flag)).
 
