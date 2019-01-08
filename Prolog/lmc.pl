@@ -4,7 +4,7 @@
 %%%% -*- Mode: Prolog -*-
 
 %%%% lmc.pl
-lmc_run(Filename,  Input, Output) :-
+lmc_run(Filename, Input, Output) :-
     lmc_load(Filename, Mem),
     execution_loop(state(0, 0, Mem, Input, [], "NoFlag"), Output), !.
 
@@ -59,10 +59,10 @@ remove_comment([H | T], [H | Z]) :-
 
 %string_to_number/2
 string_to_number(Inst, InstNumb) :-
-    Y = ["HLT","ADD", "SUB",
-         "STA"," ", "LDA",
-         "BRA", "BRZ","BRP"],
-    nth0(InstNumb, Y ,Inst),
+    Y = ["HLT", "ADD", "SUB",
+         "STA", " ", "LDA",
+         "BRA", "BRZ", "BRP"],
+    nth0(InstNumb, Y, Inst),
     member(Inst, Y), !.
 string_to_number(Inst, Num) :-
     string(Inst),
