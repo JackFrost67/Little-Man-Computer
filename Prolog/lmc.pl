@@ -1,11 +1,9 @@
-
 %%%%% Matricola: 829937 Fabio D'Elia
 %%%%% Progetto LMC - LITTLE MAN COMPUTER
 
 %%%% -*- Mode: Prolog -*-
 
 %%%% lmc.pl
-
 lmc_run(Filename,  Input, Output) :-
     lmc_load(Filename, Mem),
     execution_loop(state(0, 0, Mem, Input, [], "NoFlag"), Output), !.
@@ -155,7 +153,7 @@ execution_loop(state(Acc, Pc, Mem, Input, Output, Flag), Output1):-
     length(Mem, Len),
     Pc < Len,
     one_instruction(state(Acc, Pc, Mem, Input, Output, Flag), NewState),
-    execution_loop(NewState, Output1).
+    execution_loop(NewState, Output1), !.
 execution_loop(state(_, Pc, Mem, _, Output, _), Output1):-
     length(Mem, Len),
     Pc = Len,
