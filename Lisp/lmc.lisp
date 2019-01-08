@@ -101,7 +101,7 @@
 	       (interpreter (cdr list) label)))))
 	     (t (cons
 		 (list (nth (+ (position (car e) operands) 1) operands))
-		 (interpreter (cdr list) label))))))))
+		 (interpreter (cdr list) label)))))))
 
 ;;; value/1
 (defun value (memory)
