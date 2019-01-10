@@ -3,16 +3,16 @@ Matricola: 829937 - Fabio D'Elia
 -*- Mode: Lisp -*-
 
 lmc-run/2 : 
-    Predicato che prende in input il path, riferito al file .lmc, 
+    Funzione che prende in input il path, riferito al file .lmc, 
     e la lista in input. 
     lmc-run/2 contiene le chiamate a lmc-load/1, che genera la memoria, 
     e execution-loop/2.
 
 lmc-load/1 : 
-    Predicato che genera la memoria. 
+    Funzione che genera la memoria. 
     Contiene tutti i predicati che manipolano la lista di simboli
     derivanti da remove-file/1.
-    Il predicato conclude con la concatenazione della lista parsata
+    La funzione conclude con la concatenazione della lista parsata
     e la lista contenenti tanti zeri quante le celle di memoria vuote.
 
 read-file/1 : 
@@ -40,7 +40,7 @@ remove-label/2 :
 
 interpreter/2:
     Qui avviene il vero parsing. 
-    Il predicato prende in input la lista derivante da remove-label/2
+    La funzione prende in input la lista derivante da remove-label/2
     e la lista label, contenente tutte le etichette e i suoi riferimenti.
     Al suo interno viene dichiarata la lista operands che contiene tutte 
     le operazioni e i suoi codici macchina.
