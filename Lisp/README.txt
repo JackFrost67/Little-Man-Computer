@@ -1,6 +1,14 @@
 Matricola: 829937 - Fabio D'Elia
 
--*- Mode: Lisp -*-
+-*- Lisp README -*-
+
+Il programma prende in input il path ad un file in assembly (formato .lmc),
+la lista di input, computa e ne restituisce il risultato.
+Per questo progetto ho usato Emacs usando la repository kelleyk/emacs
+(perchè le icone di emacs25 sono davvero brutte) in combinata con slime
+e sbcl.
+Il mio .emacs è disponibile su Github: https://github.com/JackFrost67
+Qualsiasi pull request è ben accetta.
 
 lmc-run/2 : 
     Funzione che prende in input il path, riferito al file .lmc, 
@@ -70,10 +78,3 @@ one-instruction/1:
     Il resto della lista identifica, corrispettivamente, l'ACCUMULATORE, 
     il PC, la MEMORIA, la lista di INPUT, la lista di OUTPUT e il FLAG che
     viene attivato/disattivato in particolari situazioni.
-    
-Il programma prende in input il path al file e la lista di input.
-Per questo progetto ho usato Emacs usando la repository kelleyk/emacs
-(perchè le icone di emacs25 sono davvero brutte) in combinata con slime
-e sbcl.
-Il mio .emacs è disponibile su Github: https://github.com/JackFrost67
-Qualsiasi pull request è ben accetta.

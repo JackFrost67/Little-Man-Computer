@@ -27,19 +27,32 @@ lmc_load(FileName, Mem2) :-
     close(BufferIn).
 
 %%%out_/2
+%%%out_(List, NewList).
 out_([], []).
 out_([H | T], [H1 | T1]) :-
     out(H, H1),
     out_(T, T1), !.
 
 %%%out/2
+%%%out(String, NoComment).
 out([], []).
 out(H, List2) :-
     string_chars(H, H1),
     remove_comment(H1, List),
     string_chars(List2, List), !.
 
+%%%remove_comment/2
+%%%remove comments, just for fun
+remove_comment([], []).
+remove_comment([H, H | _], []) :-
+    atom_string('/', H).
+remove_comment([H | T], [H | Z]) :-
+    remove_comment(T, Z).
+
 %%%interpreter_/3
+%%%interpreter(ListOfLists, NewListOfLists).
+%%%parse the instruction.
+%%%labels resolved.
 interpreter_([], [], _).
 interpreter_([H | T], [H2 | T2], Labels) :-
     label2(H, H1, Labels),
@@ -47,19 +60,14 @@ interpreter_([H | T], [H2 | T2], Labels) :-
     interpreter_(T, T2, Labels), !.
 
 %%%interpreter/2
+%%%interpreter(List, ParsedList).
 interpreter([], []).
 interpreter([H | T], [H1 | T1]) :-
     string_to_number(H, H1),
     interpreter(T, T1), !.
 
-%%%remove_comment/2
-remove_comment([], []).
-remove_comment([H, H | _], []) :-
-    atom_string('/', H).
-remove_comment([H | T], [H | Z]) :-
-    remove_comment(T, Z).
-
 %%%string_to_number/2
+%%%from string to code
 string_to_number(Inst, InstNumb) :-
     Y = ["HLT", "ADD", "SUB",
          "STA", " ", "LDA",
@@ -75,6 +83,8 @@ string_to_number("DAT", 0).
 string_to_number(String, String).
 
 %%%label/4
+%%%label(ListOfString, Index, NewList, ListOfLabels).
+%%%catching labels
 label([], _, [], []).
 label([H | T], Index, [H1 | T1], [H2 | T2]):-
     split_string(H, " ", "\s", List),
@@ -83,6 +93,8 @@ label([H | T], Index, [H1 | T1], [H2 | T2]):-
     label(T, Index1, T1, T2), !.
 
 %%%label1/4
+%%%label1(ListOfWords, Index, NewList, ListOfLabels).
+%%%catching labels for real
 label1(List, Index, Mem, [Elem, Index]) :-
     length(List, 3),
     nth0(0, List, Elem, Mem),!.
@@ -95,6 +107,8 @@ label1(List, Index, Mem, [Elem, Index]):-
 label1(List, _, List, 0).
 
 %%%label2/3
+%%%label2(List, NewList, ListOfLabels).
+%%%solving labels
 label2(List, List, _) :-
     length(List, 2),
     nth0(0, List, Dat),
@@ -111,12 +125,15 @@ label2(List, List2, Labels) :-
 label2(List, List, _).
 
 %%%value_/2
+%%%value_(ListOfLists, NewListOfCodes).
 value_([], []).
 value_([H | T], [H1 | T1]) :-
     value(H, H1),
     value_(T, T1),!.
 
 %%%value/2
+%%%value(Instruction, InstructionCode).
+%%%get the code
 value([H1, H2], Value) :-
     Value is (H1 * 100) + H2.
 value([H1 | _], [H1]).
@@ -127,6 +144,7 @@ replace(Pos, List, Elem, NewList):-
     nth0(Pos, NewList, Elem, TmpList).
 
 %%%is_member/1
+%%%how to understand if somenthing is a label or not
 is_member(X) :-
     Y = ["HLT", "ADD", "SUB",
          "STA", "LDA", "BRA",
