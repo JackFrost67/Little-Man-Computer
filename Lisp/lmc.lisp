@@ -29,6 +29,7 @@
     (flatten (substitute 0 'nil memory))))
 
 ;;; read-file/1
+;;; read file (I hope)
 (defun read-file (path)
   (with-open-file (f path  :direction :input)
     (labels ((read-helper ()
@@ -39,6 +40,7 @@
       (read-helper))))
 
 ;;; remove-comment/1
+;;; remove comments
 (defun remove-comment (str)
   (when (eq (search "//" str) nil)
     (multiple-value-bind (value num-chars) (read-from-string str nil)
@@ -53,6 +55,7 @@
 		   (flatten (rest x))))))
 
 ;;; label/2
+;;; take every label from the list
 (defun label (list list1)
   (let*((e (car list)) ;;riga
 	(w (nth 0 e))
@@ -71,6 +74,7 @@
 	    (t (label (cdr list) list1))))))
 
 ;;; remove-label/2
+;;; remove labels from the list
 (defun remove-label (list label)
   (let* ((e (car label))
 	 (n (car (cdr e)))
@@ -81,6 +85,7 @@
     (replace list new-list)))
 
 ;;; interpreter/3
+;;; parse the instructions 
 (defun interpreter (list label)
   (let ((e (car list))
 	(operands
@@ -104,6 +109,7 @@
 		(interpreter (cdr list) label)))))))
 
 ;;; value/1
+;;; get the value of the instruction
 (defun value (memory)
   (let ((e (car memory)))
     (unless (eq e nil)
@@ -141,6 +147,7 @@
 	  (t (cond ((= inp-out 901) (inp state new-pc))
 		   (t (out state new-pc)))))))
 ;;; hlt/1
+;;; new state is 'halted-state
 (defun hlt (state)
   (substitute 'HALTED-STATE 'STATE state))
 

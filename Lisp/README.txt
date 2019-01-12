@@ -59,7 +59,7 @@ execution-loop/1:
     un'istruzione non valida o un HLT. In questo caso restituisce la lista
     di OUTPUT. 
     In caso contrario chiama la one-instruction/1 (come richiesto).
-    
+
 one-instruction/1:
     Prende in input lo stato e modifica le sue componenti in base
     all'istruzine corrente identificata dal PC (program-counter).
@@ -70,3 +70,10 @@ one-instruction/1:
     Il resto della lista identifica, corrispettivamente, l'ACCUMULATORE, 
     il PC, la MEMORIA, la lista di INPUT, la lista di OUTPUT e il FLAG che
     viene attivato/disattivato in particolari situazioni.
+    
+Il programma prende in input il path al file e la lista di input.
+Per questo progetto ho usato Emacs usando la repository kelleyk/emacs
+(perchè le icone di emacs25 sono davvero brutte) in combinata con slime
+e sbcl.
+Il mio .emacs è disponibile su Github: https://github.com/JackFrost67
+Qualsiasi pull request è ben accetta.
