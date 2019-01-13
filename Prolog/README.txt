@@ -4,11 +4,8 @@ Matricola: 829937 - Fabio D'Elia
 
 Il programma prende in input il path ad un file in assembly (formato .lmc),
 la lista di input, computa e ne restituisce il risultato.
-Per questo progetto ho usato Emacs usando la repository kelleyk/emacs
-(perchè le icone di emacs25 sono davvero brutte) in combinata con slime
-e sbcl.
-Il mio .emacs è disponibile su Github: https://github.com/JackFrost67
-Qualsiasi pull request è ben accetta.
+Per questo progetto ho usato Emacs builted-in Prolog, soltanto perchè
+non sapevo l'interprete Prolog fosse già installato su Emacs.
 
 lmc_run/3:
     Predicato che prende in input il path relativo al file che si vuole 

@@ -1,0 +1,23 @@
+writeLoop INP
+BRZ readLoop
+writeStart DAT 350
+LDA writeStart
+ADD one
+STA writeStart
+LDA count
+ADD one
+STA count
+BRA writeLoop
+readLoop LDA count
+SUB one
+STA count
+BRZ done
+readStart DAT 550
+OUT
+LDA readStart
+ADD one
+STA readStart
+BRA readLoop
+done HLT
+count DAT 1
+one DAT 1

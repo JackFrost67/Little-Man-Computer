@@ -4,7 +4,8 @@ Matricola: 829937 - Fabio D'Elia
 
 Il programma prende in input il path ad un file in assembly (formato .lmc),
 la lista di input, computa e ne restituisce il risultato.
-Per questo progetto ho usato Emacs usando la repository kelleyk/emacs
+Per questo progetto ho usato Emacs (mi rifiuto di usare 
+quell'aborto di LispWorks) usando la repository kelleyk/emacs
 (perchè le icone di emacs25 sono davvero brutte) in combinata con slime
 e sbcl.
 Il mio .emacs è disponibile su Github: https://github.com/JackFrost67
