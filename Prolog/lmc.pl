@@ -293,10 +293,11 @@ one_instruction(state(Acc, Pc, Mem, Input, Output, Flag),
 
 %%%input
 one_instruction(state(_, Pc, Mem, Input, Output, Flag),
-                state(Acc1, Pc1, Mem, Input1, Output, Flag)) :-
+                state(NewAcc, Pc1, Mem, Input1, Output, Flag)) :-
     nth0(Pc, Mem, Inst),
     Inst is 901,
     nth0(0, Input, Acc1, Input1),
+    NewAcc is mod(Acc1, 1000),
     Pc1 is Pc + 1.
 
 %%%output
