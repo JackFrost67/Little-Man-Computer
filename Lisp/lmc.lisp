@@ -210,7 +210,7 @@
 	(list (rest (nth 8 state))))
     (cond ((eql (nth 8 state) nil)
 	   (hlt state))
-	  (t (setf (nth 2 state) element)
+	  (t (setf (nth 2 state) (mod element 1000))
 	     (setf (nth 8 state) list)
 	     (setf (nth 4 state) new-pc)
 	     state))))
