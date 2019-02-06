@@ -1,4 +1,4 @@
-Matricola: 829937 - Fabio D'Elia
+
 
 -*- Lisp README -*-
 
