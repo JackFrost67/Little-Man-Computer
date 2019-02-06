@@ -1,4 +1,4 @@
-;;;; Matricola: 829937 - Fabio D'Elia
+
 ;;;; Progetto LMC - LITTLE MAN COMPUTER
 
 ;;;; -*- Mode: Lisp -*-
